@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="first_note">Первая заметка</string>
+    <string name="second_note">Вторая заметка</string>
+
+    <string-array name="note_titles">
+        <item>Первая заметка</item>
+        <item>Вторая заметка</item>
+        <item>Третья заметка</item>
+        <item>Четвёртая заметка</item>
+        <item>Пятая заметка</item>
+        <item>Шестая заметка</item>
+    </string-array>
+    <string-array name="note_texts">
+        <item>Текст первой заметки</item>
+        <item>Текст второй заметки</item>
+        <item>Текст третьей заметки</item>
+        <item>Текст четвертой заметки</item>
+        <item>Текст пятой заметки</item>
+        <item>Текст шестой заметки</item>
+    </string-array>
 </resources>
