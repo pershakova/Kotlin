@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.kotlin.example.R
-import com.kotlin.example.common.Shared
 import com.kotlin.example.mvvm.viewmodel.MainViewModel
 import com.kotlin.example.ui.adapter.NotesRVAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -19,11 +18,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Shared.context = applicationContext
+
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         rv_notes.layoutManager = GridLayoutManager(this, 2)
-        adapter = NotesRVAdapter()
+        adapter = NotesRVAdapter{
+            NoteActivity.start(this, it)
+        }
         rv_notes.adapter = adapter
 
         viewModel.getViewState().observe(this, Observer { value ->
@@ -31,7 +32,9 @@ class MainActivity : AppCompatActivity() {
                 adapter.notes = it.notes
             }
         })
+
+        fab.setOnClickListener {
+            NoteActivity.start(this)
+        }
     }
-
-
 }
