@@ -19,4 +19,5 @@
         <item>Текст пятой заметки</item>
         <item>Текст шестой заметки</item>
     </string-array>
+    <string name="new_note">Новая заметка</string>
 </resources>
