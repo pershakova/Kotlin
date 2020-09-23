@@ -7,7 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.ViewModelProvider
+import org.koin.android.viewmodel.ext.android.viewModel
 import com.kotlin.example.R
 import com.kotlin.example.mvvm.model.Note
 import com.kotlin.example.mvvm.viewmodel.NoteViewModel
@@ -29,9 +29,7 @@ class NoteActivity : BaseActivity<Note?, NoteViewState>() {
 
     override val layoutRes: Int = R.layout.activity_note
     private var note: Note? = null
-    override val viewModel by lazy {
-        ViewModelProvider(this).get(NoteViewModel::class.java)
-    }
+    override val viewModel: NoteViewModel by viewModel()
 
     val textWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {

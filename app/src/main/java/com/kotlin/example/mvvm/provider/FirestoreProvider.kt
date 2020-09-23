@@ -9,7 +9,7 @@ import com.kotlin.example.mvvm.model.Note
 import com.kotlin.example.mvvm.model.NoteResult
 import com.kotlin.example.mvvm.model.User
 
-class FirestoreProvider : DataProvider {
+class FirestoreProvider(val firebaseAuth: FirebaseAuth, val store: FirebaseFirestore) : DataProvider {
 
     companion object {
         private const val NOTES_COLLECTION = "notes"
@@ -19,7 +19,6 @@ class FirestoreProvider : DataProvider {
     private val currentUser
         get() = FirebaseAuth.getInstance().currentUser
 
-    private val store by lazy { FirebaseFirestore.getInstance() }
     private val notesReference
         get() = currentUser?.let {
             store.collection(USERS_COLLECTION).document(it.uid).collection(NOTES_COLLECTION)
