@@ -4,7 +4,7 @@ import com.kotlin.example.mvvm.model.Note
 import com.kotlin.example.mvvm.model.NoteResult
 import com.kotlin.example.mvvm.model.NotesRepository
 
-class NoteViewModel : BaseViewModel<Note?, NoteViewState>() {
+class NoteViewModel(val notesRepository: NotesRepository) : BaseViewModel<Note?, NoteViewState>() {
 
     init {
         viewStateLiveData.value = NoteViewState()
@@ -17,7 +17,7 @@ class NoteViewModel : BaseViewModel<Note?, NoteViewState>() {
     }
 
     fun loadNote(noteId: String) {
-        NotesRepository.getNoteById(noteId).observeForever { result ->
+        notesRepository.getNoteById(noteId).observeForever { result ->
             result ?: return@observeForever
             when(result){
                 is NoteResult.Success<*> ->  viewStateLiveData.value = NoteViewState(note = result.data as? Note)
@@ -28,7 +28,7 @@ class NoteViewModel : BaseViewModel<Note?, NoteViewState>() {
 
     override fun onCleared() {
         pendingNote?.let {
-            NotesRepository.saveNote(it)
+            notesRepository.saveNote(it)
         }
     }
 
