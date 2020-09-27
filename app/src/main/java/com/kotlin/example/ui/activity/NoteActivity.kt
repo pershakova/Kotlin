@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_note.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NoteActivity : BaseActivity<Note?, NoteViewState>() {
+class NoteActivity : BaseActivity<NoteViewState.Data, NoteViewState>() {
     companion object {
         private const val NOTE_KEY = "note"
         private const val DATE_FORMAT = "dd.MM.yy HH:mm"
@@ -30,6 +30,8 @@ class NoteActivity : BaseActivity<Note?, NoteViewState>() {
     override val layoutRes: Int = R.layout.activity_note
     private var note: Note? = null
     override val viewModel: NoteViewModel by viewModel()
+
+    var color: Note.Color = Note.Color.WHITE
 
     val textWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
@@ -54,11 +56,13 @@ class NoteActivity : BaseActivity<Note?, NoteViewState>() {
         }
     }
 
-    override fun renderData(data: Note?) {
-        this.note = data
-        supportActionBar?.title = note?.let {
-            SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(it.lastChanged)
-        } ?: getString(R.string.new_note)
+    override fun renderData(data: NoteViewState.Data) {
+        if (data.isDeleted) {
+            finish()
+            return
+        }
+
+        this.note = data.note
         initView()
     }
 

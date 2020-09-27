@@ -4,7 +4,7 @@ import com.kotlin.example.mvvm.model.Note
 import com.kotlin.example.mvvm.model.NoteResult
 import com.kotlin.example.mvvm.model.NotesRepository
 
-class NoteViewModel(val notesRepository: NotesRepository) : BaseViewModel<Note?, NoteViewState>() {
+class NoteViewModel(val notesRepository: NotesRepository) : BaseViewModel<NoteViewState.Data, NoteViewState>(){
 
     init {
         viewStateLiveData.value = NoteViewState()
@@ -19,9 +19,25 @@ class NoteViewModel(val notesRepository: NotesRepository) : BaseViewModel<Note?,
     fun loadNote(noteId: String) {
         notesRepository.getNoteById(noteId).observeForever { result ->
             result ?: return@observeForever
-            when(result){
-                is NoteResult.Success<*> ->  viewStateLiveData.value = NoteViewState(note = result.data as? Note)
+            when (result) {
+                is NoteResult.Success<*> -> {
+                    pendingNote = result.data as? Note
+                    viewStateLiveData.value = NoteViewState(NoteViewState.Data(note = pendingNote))
+                }
                 is NoteResult.Error -> viewStateLiveData.value = NoteViewState(error = result.error)
+            }
+        }
+    }
+
+    fun deleteNote() {
+        pendingNote?.let {
+            notesRepository.deleteNote(it.id).observeForever { result ->
+                result ?: return@observeForever
+                pendingNote = null
+                when (result) {
+                    is NoteResult.Success<*> -> viewStateLiveData.value = NoteViewState(NoteViewState.Data(isDeleted = true))
+                    is NoteResult.Error -> viewStateLiveData.value = NoteViewState(error = result.error)
+                }
             }
         }
     }
@@ -31,5 +47,4 @@ class NoteViewModel(val notesRepository: NotesRepository) : BaseViewModel<Note?,
             notesRepository.saveNote(it)
         }
     }
-
 }
